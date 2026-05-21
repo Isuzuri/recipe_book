@@ -1,5 +1,5 @@
 class RecipesController < ApplicationController
-    before_action :set_recipe, only: [:show, :update, :destroy]
+    before_action :set_recipe, only: [ :show, :update, :destroy ]
 
     def index
         @recipes = Recipe.all
@@ -22,7 +22,7 @@ class RecipesController < ApplicationController
     def update
         if @recipe.update(recipe_params)
             render json: @recipe
-        else 
+        else
             render json: @recipe.errors
         end
     end
