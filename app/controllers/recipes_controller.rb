@@ -16,7 +16,7 @@ class RecipesController < ApplicationController
     end
 
     def show
-            render json: @recipe
+        render json: @recipe, include: { recipe_ingredients: {include: :ingredient}}
     end
 
     def update
