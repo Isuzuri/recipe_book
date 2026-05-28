@@ -19,8 +19,9 @@ class ApplicationController < ActionController::API
     end
 
     def current_user
-        if decode_token
-            user_id = decode_token[0]["user_id"]
+        decoded = decode_token
+        if decoded
+            user_id = decoded[0]["user_id"]
             @user = User.find_by(id: user_id)
         end
     end
@@ -30,4 +31,12 @@ class ApplicationController < ActionController::API
             render json: { error: "Unauthorized" }, status: :unauthorized
         end
     end
+
+    private
+
+    def generate_refresh_token(user)
+        token = SecureRandom.hex(32)
+        user.refresh_tokens.create(token: token, expires_at: 30.days.from_now)
+        token
+    end  
 end

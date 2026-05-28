@@ -1,13 +1,19 @@
 class RecipesController < ApplicationController
-    before_action :set_recipe, only: [ :show, :update, :destroy ]
+    before_action :set_recipe, only: [ :show ]
+    before_action :set_user_recipes, only: [ :update, :destroy ]
 
     def index
         @recipes = Recipe.all
         render json: @recipes
     end
 
+    def my_recipes
+        @recipes = @user.recipes
+        render json: @recipes
+    end
+
     def create
-        @recipe = Recipe.new(recipe_params)
+        @recipe = @user.recipes.build(recipe_params)
         if @recipe.save
             render json: @recipe
         else
@@ -39,6 +45,11 @@ class RecipesController < ApplicationController
 
     def set_recipe
         @recipe = Recipe.find_by(id: params[:id])
+        render json: "Recipe not found" if @recipe == nil
+    end
+
+    def set_user_recipes
+        @recipe = @user.recipes.find_by(id: params[:id])
         render json: "Recipe not found" if @recipe == nil
     end
 end

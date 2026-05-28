@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+    has_many :recipes
+    has_many :refresh_tokens
     has_secure_password
 
     validates :email, :password, presence: true
