@@ -3,7 +3,7 @@ class RecipesController < ApplicationController
     before_action :set_user_recipes, only: [ :update, :destroy ]
 
     def index
-        @recipes = Recipe.all
+        @recipes = Recipe.all.by_spiciness(params[:spiciness]).cooking_time_less_than(params[:max_cooking_time]).search_by_name(params[:query])
         render json: @recipes
     end
 
@@ -39,6 +39,7 @@ class RecipesController < ApplicationController
     end
 
     private
+
     def recipe_params
         params.require(:recipe).permit(:title, :description, :cooking_time, :servings, :spiciness)
     end
