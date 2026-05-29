@@ -8,11 +8,16 @@ Rails.application.routes.draw do
     sessions: "users/sessions"
   }
 
-  resources :ingredients
-  resources :recipes do
-    collection do
-      get :my_recipes
+  namespace :api do
+    namespace :v1 do
+      resources :ingredients
+
+      resources :recipes do
+        collection do
+          get :my_recipes
+        end
+      resources :recipe_ingredients
+      end
     end
-    resources :recipe_ingredients
   end
 end
