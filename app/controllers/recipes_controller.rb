@@ -3,12 +3,12 @@ class RecipesController < ApplicationController
     before_action :set_user_recipes, only: [ :update, :destroy ]
 
     def index
-        @recipes = Recipe.all
+        @recipes = filtered_recipes(Recipe.all)
         render json: @recipes
     end
 
     def my_recipes
-        @recipes = current_user.recipes
+        @recipes = filtered_recipes(current_user.recipes)
         render json: @recipes
     end
 
@@ -39,6 +39,7 @@ class RecipesController < ApplicationController
     end
 
     private
+
     def recipe_params
         params.require(:recipe).permit(:title, :description, :cooking_time, :servings, :spiciness)
     end
@@ -51,5 +52,12 @@ class RecipesController < ApplicationController
     def set_user_recipes
         @recipe = current_user.recipes.find_by(id: params[:id])
         render json: "Recipe not found" if @recipe == nil
+    end
+
+    def filtered_recipes(scope)
+        scope
+            .by_spiciness(params[:spiciness])
+            .cooking_time_less_than(params[:max_cooking_time])
+            .search_by_name(params[:query])
     end
 end
