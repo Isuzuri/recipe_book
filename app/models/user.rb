@@ -1,10 +1,10 @@
 class User < ApplicationRecord
-    has_many :recipes
-    has_many :refresh_tokens
-    has_secure_password
+  include Devise::JWT::RevocationStrategies::JTIMatcher
 
-    validates :email, :password, presence: true
-    validates :email, uniqueness: true
-    validates :email, format: { with: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/, message: "invalid format" }
-    validates :password, length: { minimum: 6, message: "password length must be more than 6 symbols" }
+  has_many :recipes
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable,
+         :jwt_authenticatable, jwt_revocation_strategy: self
 end

@@ -8,12 +8,12 @@ class RecipesController < ApplicationController
     end
 
     def my_recipes
-        @recipes = @user.recipes
+        @recipes = current_user.recipes
         render json: @recipes
     end
 
     def create
-        @recipe = @user.recipes.build(recipe_params)
+        @recipe = current_user.recipes.build(recipe_params)
         if @recipe.save
             render json: @recipe
         else
@@ -49,7 +49,7 @@ class RecipesController < ApplicationController
     end
 
     def set_user_recipes
-        @recipe = @user.recipes.find_by(id: params[:id])
+        @recipe = current_user.recipes.find_by(id: params[:id])
         render json: "Recipe not found" if @recipe == nil
     end
 end
