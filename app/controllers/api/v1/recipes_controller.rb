@@ -5,13 +5,13 @@ module Api
             before_action :set_user_recipes, only: [ :update, :destroy ]
 
             def index
-                @recipes = filtered_recipes(Recipe.all)
-                render json: @recipes
+                @recipes = filtered_recipes(Recipe.all).includes(:user, :recipe_ingredients, :ingredients)
+                render json: serialize_many(@recipes, RecipeSerializer)
             end
 
             def my_recipes
-                @recipes = filtered_recipes(current_user.recipes)
-                render json: @recipes
+                @recipes = filtered_recipes(current_user.recipes).includes(:user, :recipe_ingredients, :ingredients)
+                render json: serialize_many(@recipes, RecipeSerializer)
             end
 
             def create
@@ -24,7 +24,7 @@ module Api
             end
 
             def show
-                render json: @recipe, include: { recipe_ingredients: { include: :ingredient } }
+                render json: serialize(@recipe, RecipeSerializer)
             end
 
             def update
